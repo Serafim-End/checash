@@ -22,10 +22,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fx)vc4wh5ov43y1lxw+&4%6bl6*+em4j$m&3lkfz(&q7nl82p('
-
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
 ALLOWED_HOSTS = []
 
@@ -80,21 +77,47 @@ WSGI_APPLICATION = 'checash.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    # },
 
+if os.getenv('BUILD_ON_TRAVIS', None):
+
+    SECRET_KEY = 'i1ry9wiyq)hs(6*ltq0lrj3(c+)0@4&i3k*80cv+2d&7*gm&-e'
+
+    DEBUG = False
+
+    TEMPLATE_DEBUG = True
+
+    DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
-            'NAME': 'postgres',
+            'NAME': 'travis_ci_db',
             'USER': 'postgres',
-            'PASSWORD': '3411340',
-            'HOST': 'localhost',
-            'PORT': '5432',
+            'PASSWORD': '',
+            'HOST': '127.0.0.1',
+            'PORT': 5432
         }
-}
+    }
+
+else:
+
+    SECRET_KEY = 'fx)vc4wh5ov43y1lxw+&4%6bl6*+em4j$m&3lkfz(&q7nl82p('
+
+    DEBUG = True
+
+    DATABASES = {
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        # },
+
+            'default': {
+                'ENGINE': 'django.db.backends.postgresql',
+                'NAME': 'postgres',
+                'USER': 'postgres',
+                'PASSWORD': '3411340',
+                'HOST': 'localhost',
+                'PORT': '5432',
+            }
+    }
 
 
 # Password validation

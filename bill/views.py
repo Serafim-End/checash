@@ -17,13 +17,10 @@ class BillView(APIView):
 
         data = request.data
 
-        try:
-            fn = data.get('fn')
-            i = data.get('i')
-            fp = data.get('fp')
-            n = data.get('n')
-        except Exception as e:
-            client.captureException(exc_info='204 - no content')
+        _g = lambda n: data.get(n)
+
+        fn, i, fp, n = _g('fn'), _g('i'), _g('fp'), _g('n')
+
 
 
         BillSerializer(**data)

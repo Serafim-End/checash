@@ -5,6 +5,7 @@ from rest_framework import serializers
 
 from items.serializers import ItemSerializer
 from items.models import Item
+from checash.settings import client
 
 from .models import Bill
 
