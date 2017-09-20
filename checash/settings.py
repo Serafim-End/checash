@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'bill.apps.BillConfig',
     'promo.apps.PromoConfig',
     'user.apps.UserConfig',
+    'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -156,7 +157,18 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
+
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+STATIC_PATH = os.path.join(os.path.join(BASE_DIR, 'static'), 'staticfiles')
+
+STATICFILES_DIRS = (
+    # Put strings here, like "/home/html/static" or "C:/www/django/static".
+    # Always use forward slashes, even on Windows.
+    STATIC_PATH,
+)
+
 
 SENTRY_PUBLIC_KEY = 'e6e95f90373f4ab1a956841d0e093961'
 SENTRY_SECRET_KEY = '4eb94ef2e95846f29c244f2500f6cc53'

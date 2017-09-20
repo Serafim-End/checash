@@ -18,6 +18,8 @@ class Bill(models.Model):
     # "receiptCode": 3,
     # "senderAddress": "",
 
+    fiscalSign = models.IntegerField(primary_key=True)
+
     dateTime = models.DateTimeField(auto_now=True)
     nds18 = models.IntegerField(default=-1)
     taxation_type = models.IntegerField(default=-1)

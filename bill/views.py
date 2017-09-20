@@ -3,51 +3,31 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 
-from checash.settings import client
-
 from .serializers import BillSerializer
+from .service import BillService
 
 
 class BillView(APIView):
 
     def post(self, request, format=None):
+        """
 
-        # nice example
-        # fn = 8710000100239499 & i = 36082 & fp = 1134274756 & n = 1
+        :param request: contains data that contain no less than 4 fields
+        (fn, i, fp and n) that are required to get info from the bill
+
+        nice example
+        fn = 8710000100239499 & i = 36082 & fp = 1134274756 & n = 1
+
+        :param format:
+        :return: serialized data from our model
+        """
 
         data = request.data
 
-        _g = lambda n: data.get(n)
+        bill_info = BillService.get_info(data)
 
-        fn, i, fp, n = _g('fn'), _g('i'), _g('fp'), _g('n')
+        serializer = BillSerializer(data=bill_info)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
 
-
-
-        BillSerializer(**data)
-
-        if 'user_id' not in data:
-            return Response('user_id address should be in request',
-                            status=status.HTTP_400_BAD_REQUEST)
-
-        try:
-            user_id = data.get('user_id')
-        except Exception as e:
-            client.captureException(exc_info='400')
-
-            return Response(
-                'error during user_id parsing: {}'.format(e.message),
-                status=status.HTTP_400_BAD_REQUEST
-            )
-
-        user = user_getter(user_id=user_id)
-        if user.friends.count() == 0:
-            return Response('No friends were found for this user',
-                            status=status.HTTP_404_NOT_FOUND)
-
-        friends_ids = json.dumps(
-            {
-                'friends': [f.kinohod_id for f in user.friends.all()]
-            }
-        )
-
-        return Response(data=friends_ids, status=status.HTTP_200_OK)
+        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
