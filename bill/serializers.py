@@ -7,6 +7,7 @@ from items.serializers import ItemSerializer
 from items.models import Item
 
 from .models import Bill
+from .service import BillService
 
 
 class BillSerializer(serializers.ModelSerializer):
@@ -51,6 +52,6 @@ class BillSerializer(serializers.ModelSerializer):
 
             instance.items.add(item)
 
-        instance.determine_cashback()
+        BillService.determine_cashback(instance)
 
         return instance

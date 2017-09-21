@@ -9,6 +9,7 @@ from rest_framework import status
 from bill.serializers import BillSerializer
 from bill.models import Bill
 from promo.serializers import PromoSerializer
+from promo.service import PromoService
 
 from .models import Person
 from .serializers import PersonSerializer
@@ -85,15 +86,21 @@ class PersonViewSet(ModelViewSet):
         person = self.get_object()
 
         if not bill_id:
-            data = {}
-            for bill in person.bills.all():
-                data[bill.fiscalSign] = PromoSerializer(
-                    bill.promos.all(), many=True
-                )
-
-            return Response(json.dumps(data), status=status.HTTP_200_OK)
+            return Response(status=status.HTTP_400_BAD_REQUEST)
 
         o = Bill.objects.filter(fiscalSign=bill_id)
+
+        if o not in person.bills.all():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
         if o.count() == 1:
-            return Response(PromoSerializer(o.promos.all(), many=True),
-                            status=status.HTTP_200_OK)
+
+            active_promos = PromoService.get_active_promos()
+
+            data = {}
+            for item in o.items.all():
+                for promo in item.promos.all():
+                    if promo in active_promos:
+                        data[item.id] = PromoSerializer(promo)
+
+            return Response(json.dumps(data), status=status.HTTP_200_OK)

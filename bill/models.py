@@ -1,8 +1,6 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
-from promo.service import PromoService
-
 
 class Organization(models.Model):
 
@@ -37,17 +35,6 @@ class Bill(models.Model):
 
     in_processing = models.BooleanField(default=True)
 
-    def determine_cashback(self):
-
-        active_promos = PromoService.get_active_promos()
-
-        # the case just for one item in promo
-        for item in self.items.all():
-            for promo in active_promos.all():
-                if (item in promo.items and
-                        self.total_sum >= promo.lower_bound_rub):
-                    self.promos.add(promo)
-                    self.cashback += promo.cashback_rub
 
 
 # class BillItem(models.Model):

@@ -1,6 +1,8 @@
 
 import requests
 
+from promo.service import PromoService
+
 
 class BillService(object):
 
@@ -33,3 +35,17 @@ class BillService(object):
 
         else:
             data = {'qr': qr}
+
+    @staticmethod
+    def determine_cashback(self, instance):
+
+        active_promos = PromoService.get_active_promos()
+
+        # the case just for one item in promo
+        for item in instance.items.all():
+            for promo in active_promos.all():
+                if (item in promo.items and
+                        instance.total_sum >= promo.lower_bound_rub):
+                    instance.cashback += promo.cashback_rub
+
+        instance.save()
