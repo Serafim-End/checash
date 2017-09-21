@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from bill.serializers import BillSerializer
+from bill.models import Bill
+from promo.serializers import PromoSerializer
 
 from .models import Person
 from .serializers import PersonSerializer
@@ -54,15 +56,15 @@ class PersonViewSet(ModelViewSet):
                         status=status.HTTP_200_OK)
 
     @detail_route(methods=['get'], url_path='get-bills-detailed')
-    def get_bill_detailed(self):
+    def get_bill_detailed(self, request, pk=None):
 
         person = self.get_object()
 
-        return Response(BillSerializer(person.bills, many=True),
+        return Response(BillSerializer(person.bills.all(), many=True),
                         status.HTTP_200_OK)
 
     @detail_route(methods=['get'], url_path='get-bills')
-    def get_bill_detailed(self):
+    def get_bill_detailed(self, request, pk=None):
 
         person = self.get_object()
 
@@ -70,9 +72,28 @@ class PersonViewSet(ModelViewSet):
                             'total_sum', 'in_processing')
 
         data = []
-        for i, bill in enumerate(person.bills):
+        for i, bill in enumerate(person.bills.all()):
             data.append({})
             for f in important_fields:
                 data[-1][f] = getattr(bill, f)
 
         return Response(json.dumps(data), status.HTTP_200_OK)
+
+    @detail_route(methods='get',
+                  url_path='get-bill-promos/(?P<bill_id>[0-9]+)')
+    def get_bill_promos(self, request, pk=None, bill_id=None):
+        person = self.get_object()
+
+        if not bill_id:
+            data = {}
+            for bill in person.bills.all():
+                data[bill.fiscalSign] = PromoSerializer(
+                    bill.promos.all(), many=True
+                )
+
+            return Response(json.dumps(data), status=status.HTTP_200_OK)
+
+        o = Bill.objects.filter(fiscalSign=bill_id)
+        if o.count() == 1:
+            return Response(PromoSerializer(o.promos.all(), many=True),
+                            status=status.HTTP_200_OK)
