@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-import raven
+# import raven
 
 # import dj_database_url
 
@@ -33,7 +33,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    'raven.contrib.django.raven_compat',
+    # 'raven.contrib.django.raven_compat',
     'items.apps.ItemsConfig',
     'bill.apps.BillConfig',
     'promo.apps.PromoConfig',
@@ -183,16 +183,16 @@ SENTRY_PUBLIC_KEY = 'e6e95f90373f4ab1a956841d0e093961'
 SENTRY_SECRET_KEY = '4eb94ef2e95846f29c244f2500f6cc53'
 SENTRY_PROJECT = '219148'
 
-RAVEN_CONFIG = {
-    'dsn': 'https://{}:{}@sentry.io/{}'.format(
-        SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
-    ),
-    # If you are using git, you can also automatically configure the
-    # release based on the git info.
-    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-    # 'CELERY_LOGLEVEL': logging.INFO
-}
+# RAVEN_CONFIG = {
+#     'dsn': 'https://{}:{}@sentry.io/{}'.format(
+#         SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
+#     ),
+#     # If you are using git, you can also automatically configure the
+#     # release based on the git info.
+#     'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+#     # 'CELERY_LOGLEVEL': logging.INFO
+# }
 
-client = raven.Client('https://{}:{}@sentry.io/{}'.format(
-    SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
-))
+# client = raven.Client('https://{}:{}@sentry.io/{}'.format(
+#     SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
+# ))
