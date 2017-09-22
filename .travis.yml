@@ -37,7 +37,7 @@ deploy:
   strategy: git
   app: checash
   on:
-    repo: https://github.com/Serafim-End/checash
+    repo: heroku/checash
     branch: master
   run:
     - "python checash/manage.py makemigrations --noinput"
