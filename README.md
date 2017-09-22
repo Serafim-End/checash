@@ -4,5 +4,5 @@
 
 
 project that can help you to get the most interesting promos based on your bills info.
-It is an open source project with deployed api on [checash.com](http://checash.com)
+It is an open source project with deployed api on [checash.com](https://checash.herokuapp.com/docs/)
 
