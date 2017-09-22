@@ -179,7 +179,7 @@ STATICFILES_DIRS = (
 )
 
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
 SENTRY_PUBLIC_KEY = 'e6e95f90373f4ab1a956841d0e093961'
 SENTRY_SECRET_KEY = '4eb94ef2e95846f29c244f2500f6cc53'
