@@ -6,3 +6,4 @@ raven==6.1.0
 requests==2.18.4
 dj-database-url==0.4.2
 gunicorn==19.7.1
+whitenoise==3.3.0

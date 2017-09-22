@@ -12,14 +12,16 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
-# import raven
+import raven
 
-# import dj_database_url
+import dj_database_url
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+TEST_RUNNER = 'checash.heroku_test_runner.HerokuDiscoverRunner'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -33,7 +35,7 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
-    # 'raven.contrib.django.raven_compat',
+    'raven.contrib.django.raven_compat',
     'items.apps.ItemsConfig',
     'bill.apps.BillConfig',
     'promo.apps.PromoConfig',
@@ -48,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -124,9 +127,9 @@ else:
     }
 
 
-# db_from_env = dj_database_url.config(conn_max_age=500)
-# DATABASES['default'].update(db_from_env)
-# DATABASES['default']['TEST'] = {'NAME': DATABASES['default']['NAME']}
+db_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(db_from_env)
+DATABASES['default']['TEST'] = {'NAME': DATABASES['default']['NAME']}
 
 
 
@@ -165,34 +168,32 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
-
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
-STATIC_PATH = os.path.join(os.path.join(BASE_DIR, 'static'), 'staticfiles')
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'staticfiles')
 
 STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    STATIC_PATH,
+    os.path.join(PROJECT_ROOT, 'static'),
 )
 
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 SENTRY_PUBLIC_KEY = 'e6e95f90373f4ab1a956841d0e093961'
 SENTRY_SECRET_KEY = '4eb94ef2e95846f29c244f2500f6cc53'
 SENTRY_PROJECT = '219148'
 
-# RAVEN_CONFIG = {
-#     'dsn': 'https://{}:{}@sentry.io/{}'.format(
-#         SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
-#     ),
-#     # If you are using git, you can also automatically configure the
-#     # release based on the git info.
-#     'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
-#     # 'CELERY_LOGLEVEL': logging.INFO
-# }
+RAVEN_CONFIG = {
+    'dsn': 'https://{}:{}@sentry.io/{}'.format(
+        SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
+    ),
+    # If you are using git, you can also automatically configure the
+    # release based on the git info.
+    'release': raven.fetch_git_sha(os.path.dirname(os.pardir)),
+    # 'CELERY_LOGLEVEL': logging.INFO
+}
 
-# client = raven.Client('https://{}:{}@sentry.io/{}'.format(
-#     SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
-# ))
+client = raven.Client('https://{}:{}@sentry.io/{}'.format(
+    SENTRY_PUBLIC_KEY, SENTRY_SECRET_KEY, SENTRY_PROJECT
+))
