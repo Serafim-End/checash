@@ -27,3 +27,18 @@ before_script:
 script:
   - python manage.py migrate
   - python manage.py test
+
+#deploy:
+#  provider: heroku
+#  buildpack: python
+#  api_key:
+#    secure: very_long_encrypted_token
+#  strategy: git
+#  app: checash
+#  on:
+#    repo: serafim-end/checash
+#  run:
+#    - "python checash/manage.py makemigrations --noinput"
+#    - "python checash/manage.py migrate"
+#    - "python checash/manage.py collectstatic"
+#    - restart
