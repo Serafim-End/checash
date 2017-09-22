@@ -15,8 +15,16 @@ Including another URLconf
 """
 from django.conf.urls import url, include
 from django.contrib import admin
+from django.contrib.staticfiles import views
+
+from .settings import DEBUG
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('bill.urls')),
 ]
+
+if DEBUG:
+    urlpatterns += [
+        url(r'^static/(?P<path>.*)$', views.serve),
+    ]
