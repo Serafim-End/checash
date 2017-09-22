@@ -36,11 +36,11 @@ ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'raven.contrib.django.raven_compat',
-    'items.apps.ItemsConfig',
-    'bill.apps.BillConfig',
-    'promo.apps.PromoConfig',
-    'user.apps.UserConfig',
-    'rest_framework_swagger'
+    'items',
+    'bill',
+    'promo',
+    'user',
+    'rest_framework_swagger',
     'rest_framework',
     'django.contrib.admin',
     'django.contrib.auth',
