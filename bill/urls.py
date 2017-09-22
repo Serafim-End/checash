@@ -5,5 +5,5 @@ from .views import BillView
 
 
 urlpatterns = [
-    url(r'^', BillView.as_view()),
+    url(r'^bill/', BillView.as_view()),
 ]

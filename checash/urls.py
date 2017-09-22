@@ -26,6 +26,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^docs/', schema_view),
     url(r'^', include('bill.urls')),
+    url(r'^', include('user.urls')),
+    url(r'^', include('promo.urls')),
 ]
 
 if DEBUG:
