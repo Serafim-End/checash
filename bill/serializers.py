@@ -52,6 +52,6 @@ class BillSerializer(serializers.ModelSerializer):
 
             instance.items.add(item)
 
-        BillService.determine_cashback(instance)
+        # BillService.determine_cashback(instance)
 
         return instance

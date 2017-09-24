@@ -31,7 +31,7 @@ script:
 
 #deploy:
 #  provider: heroku
-#  buildpack: python
+#  buildpack: heroku/python
 #  api_key:
 #    secure: 8c6f49c0-f5fc-4271-b731-96d679998743
 #  strategy: git
