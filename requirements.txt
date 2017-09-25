@@ -8,3 +8,4 @@ dj-database-url==0.4.2
 gunicorn==19.7.1
 whitenoise==3.3.0
 django-rest-swagger==2.1.2
+lxml==4.0.0
