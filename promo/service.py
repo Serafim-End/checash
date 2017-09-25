@@ -102,5 +102,3 @@ class PromoService(object):
 
         return promos
 
-if __name__ == '__main__':
-    PromoService.get_actual_promos()

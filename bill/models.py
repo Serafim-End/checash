@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.postgres.fields import JSONField
 
+from user.models import Person
+
 
 class Organization(models.Model):
 
@@ -19,6 +21,10 @@ class Bill(models.Model):
     # "senderAddress": "",
 
     fiscalSign = models.IntegerField(primary_key=True)
+    bills = models.ForeignKey(
+        Person,
+        on_delete=models.CASCADE, null=True, related_name='bills'
+    )
 
     dateTime = models.DateTimeField(auto_now=True)
     nds18 = models.IntegerField(default=-1)

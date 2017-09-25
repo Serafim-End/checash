@@ -119,7 +119,7 @@ else:
 
             'default': {
                 'ENGINE': 'django.db.backends.postgresql',
-                'NAME': 'postgres',
+                'NAME': 'checash',
                 'USER': 'postgres',
                 'PASSWORD': '3411340',
                 'HOST': 'localhost',
