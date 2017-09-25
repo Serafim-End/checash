@@ -1,14 +1,14 @@
 
 from rest_framework.serializers import ModelSerializer
 
-from bill.serializers import BillSerializer
+# from bill.serializers import BillSerializer
 
 from .models import Person
 
 
 class PersonSerializer(ModelSerializer):
 
-    bills = BillSerializer(many=True)
+    # bills = BillSerializer(many=True)
 
     class Meta:
         model = Person
