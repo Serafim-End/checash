@@ -8,4 +8,4 @@ class ItemSerializer(ModelSerializer):
 
     class Meta:
         model = Item
-        fields = ('name', 'description', 'price')
+        fields = ('name', 'description', 'price', 'url')
