@@ -92,7 +92,7 @@ class PersonViewSet(ModelViewSet):
 
         person = self.get_object()
 
-        return Response(BillSerializer(person.bills.all(), many=True),
+        return Response(BillSerializer(person.bills.all(), many=True).data,
                         status.HTTP_200_OK)
 
     @detail_route(methods=['get'], url_path='get-bills')
