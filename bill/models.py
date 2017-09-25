@@ -20,7 +20,7 @@ class Bill(models.Model):
     # "receiptCode": 3,
     # "senderAddress": "",
 
-    fiscalSign = models.IntegerField(primary_key=True)
+    fiscalSign = models.BigIntegerField(primary_key=True)
     bills = models.ForeignKey(
         Person,
         on_delete=models.CASCADE, null=True, related_name='bills'
