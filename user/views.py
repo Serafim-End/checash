@@ -1,6 +1,8 @@
 
 import json
 
+from datetime import datetime
+
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
@@ -111,8 +113,10 @@ class PersonViewSet(ModelViewSet):
         for i, bill in enumerate(person.bills.all()):
             data.append({})
             for f in important_fields:
-                data[-1][f] = (getattr(bill, f) if f != 'datetime'
-                               else bill.dateTime.strftime('%m/%d/%Y'))
+
+                value = getattr(bill, f)
+                data[-1][f] = (value if not isinstance(f, datetime)
+                               else value.strftime('%m/%d/%Y'))
 
         return Response(json.dumps(data), status.HTTP_200_OK)
 
