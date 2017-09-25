@@ -111,7 +111,8 @@ class PersonViewSet(ModelViewSet):
         for i, bill in enumerate(person.bills.all()):
             data.append({})
             for f in important_fields:
-                data[-1][f] = getattr(bill, f)
+                data[-1][f] = (getattr(bill, f) if f != 'datetine'
+                               else bill.dateTime.strftime('%m/%d/%Y'))
 
         return Response(json.dumps(data), status.HTTP_200_OK)
 
