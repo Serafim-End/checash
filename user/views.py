@@ -40,7 +40,7 @@ class PersonViewSet(ModelViewSet):
             bill_instance = serializer.save()
             person.bills.add(bill_instance)
             person.save()
-            return Response(PersonSerializer(person),
+            return Response(PersonSerializer(person).data,
                             status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors,
@@ -106,18 +106,15 @@ class PersonViewSet(ModelViewSet):
 
         person = self.get_object()
 
-        important_fields = ('fiscalSign', 'dateTime', 'cashback',
+        important_fields = ('fiscalSign', 'cashback',
                             'total_sum', 'in_processing')
 
         data = []
         for i, bill in enumerate(person.bills.all()):
             data.append({})
             for f in important_fields:
-
-                value = getattr(bill, f)
-                data[-1][f] = (value if not isinstance(f, datetime)
-                               else value.strftime('%m/%d/%Y'))
-
+                data[-1][f] = getattr(bill, f)
+        print(json)
         return Response(json.dumps(data), status.HTTP_200_OK)
 
     @detail_route(methods='get',
