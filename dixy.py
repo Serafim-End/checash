@@ -23,7 +23,7 @@ for i in range(l):
     promo = parsed_body.xpath('//div[@class="discount  " or @class="value"]/text()')[i]
 
     print name
-    print url + photo
+    print 'https://dixy.ru' + photo
     print category
     print title
     print 'Новая цена (рубли):',  price_new
