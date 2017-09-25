@@ -75,7 +75,7 @@ class PromoService(object):
     @staticmethod
     def get_actual_promos():
 
-        response = requests.get(BASE_URL)
+        response = requests.get(BASE_DISCOUNT_URL)
         parsed_body = html.fromstring(response.text)
 
         promos = []

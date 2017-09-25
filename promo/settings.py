@@ -1,5 +1,6 @@
 
 BASE_URL = 'https://dixy.ru'
+BASE_DISCOUNT_URL = '{}{}'.format(BASE_URL, '/akcii')
 PATH_WHOLE_CONTENT = '//div[@class="product"]/div/div/img/@alt'
 PATH_NAME = '//div[@class="product"]/div/div/img/@alt'
 PATH_PHOTO = '//div[@class="product"]/div/div/img/@src'
