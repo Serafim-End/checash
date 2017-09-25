@@ -7,6 +7,7 @@ from rest_framework.response import Response
 from rest_framework import status
 
 from bill.serializers import BillSerializer
+from bill.service import BillService
 from bill.models import Bill
 from promo.serializers import PromoSerializer
 from promo.service import PromoService
@@ -22,8 +23,17 @@ class PersonViewSet(ModelViewSet):
 
     @detail_route(methods=['post'], url_path='add-bill')
     def add_bill(self, request, pk=None):
+        """
+
+        :param request: should contain the data in bill serializer format
+        :param pk:
+        :return: Person Serialized format of person instance
+        and errors otherwise
+        """
         person = self.get_object()
-        serializer = BillSerializer(data=request.data)
+        bill_info = BillService.get_info(request.data)
+        serializer = BillSerializer(data=bill_info)
+
         if serializer.is_valid():
             bill_instance = serializer.save()
             person.bills.add(bill_instance)
@@ -36,6 +46,14 @@ class PersonViewSet(ModelViewSet):
 
     @detail_route(methods=['post', 'get'], url_path='get-bonus')
     def get_bonus(self, request, pk=None):
+        """
+
+        :param request:
+        POST to reset cashback
+        GET  to return current cashback
+        :param pk:
+        :return: POST - {}, GET - current cashback
+        """
 
         person = self.get_object()
 
@@ -48,9 +66,14 @@ class PersonViewSet(ModelViewSet):
             return Response(json.dumps(person.current_cashbac),
                             status=status.HTTP_200_OK)
 
-    @detail_route(methods=['post'])
+    @detail_route(methods=['get'], url_path='get-all-time-bonus')
     def get_all_time_bonus(self, request, pk=None):
+        """
 
+        :param request: no special info
+        :param pk:
+        :return: info about whole cashback through application
+        """
         person = self.get_object()
 
         return Response(json.dumps(person.total_cashback),
@@ -58,6 +81,12 @@ class PersonViewSet(ModelViewSet):
 
     @detail_route(methods=['get'], url_path='get-bills-detailed')
     def get_bill_detailed(self, request, pk=None):
+        """
+
+        :param request: no special data
+        :param pk:
+        :return: {serialized detailed info about person`s bills}
+        """
 
         person = self.get_object()
 
@@ -65,7 +94,13 @@ class PersonViewSet(ModelViewSet):
                         status.HTTP_200_OK)
 
     @detail_route(methods=['get'], url_path='get-bills')
-    def get_bill_detailed(self, request, pk=None):
+    def get_bills(self, request, pk=None):
+        """
+
+        :param request: no special data
+        :param pk:
+        :return: {serialized info about person`s bills}
+        """
 
         person = self.get_object()
 
