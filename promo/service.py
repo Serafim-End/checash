@@ -1,11 +1,18 @@
+import re
+from datetime import datetime, timedelta
 
-import datetime
+import requests
+
+from lxml import html
+
+from items.models import Item
 
 from .models import Promo
 
+from .settings import *
+
 
 class PromoService(object):
-
     @staticmethod
     def get_active_promos():
         """
@@ -14,7 +21,7 @@ class PromoService(object):
         :return: QuerySet
         """
 
-        today = datetime.datetime.today()
+        today = datetime.today()
 
         queryset = Promo.objects.filter(
             start_date__gt=today,
@@ -22,3 +29,78 @@ class PromoService(object):
         )
 
         return queryset
+
+    @staticmethod
+    def info(parsed_body):
+
+        DATE_FORMAT = '%d.%m.%Y'
+
+        def _p(p):
+            return parsed_body.xpath(p)
+
+        def _str(l):
+            print(l)
+            return l.encode('utf-8').decode('utf-8')
+
+        def _d(d):
+            return datetime.strptime(d.pop(), DATE_FORMAT)
+
+        for i in range(len(parsed_body.xpath(PATH_WHOLE_CONTENT))):
+
+            title = _str(_p(PATH_TITLE)[i])
+            data = re.findall(r'\d{2}.\d{2}.\d{2,4}', title)
+
+            if len(data) == 0:
+                _start = datetime.today()
+                _end = _start + timedelta(days=1)
+
+            elif len(data) == 1:
+                _start = datetime.today()
+                _end = _d(data)
+
+            else:
+                _end, _start = _d(data), _d(data)
+
+            yield {
+                'name': _str(_p(PATH_NAME)[i]),
+                'url': '{}{}'.format(BASE_URL, _str(_p(PATH_PHOTO)[i])),
+                'price_new': int(_str(_p(PATH_PRICE_NEW)[i])),
+                'price_old': int(_str(_p(PATH_PRICE_OLD)[i])),
+                'title': title,
+                'start': _start,
+                'end': _end,
+                'promo': _str(_p(PATH_PROMO)[i])
+            }
+
+    @staticmethod
+    def get_actual_promos():
+
+        response = requests.get(BASE_URL)
+        parsed_body = html.fromstring(response.text)
+
+        promos = []
+
+        for e in PromoService.info(parsed_body):
+            item = Item.objects.create(
+                name=e.get('name'),
+                url=e.get('url'),
+                price=int(e.get('price_new')),
+                cashback=0
+            )
+
+            promo = Promo.objects.create(
+                cashback_rub=abs(e.get('price_new') - e.get('price_old')),
+                title=e.get('title'),
+                lower_bound_rub=e.get('price_new'),
+                due_date=e.get('end'),
+                start_date=e.get('start')
+            )
+
+            promo.items = item
+
+            promos.append(promo)
+
+        return promos
+
+if __name__ == '__main__':
+    PromoService.get_actual_promos()

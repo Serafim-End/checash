@@ -10,7 +10,7 @@ from .models import Promo
 
 class PromoSerializer(serializers.ModelSerializer):
 
-    items = ItemSerializer(many=True)
+    # items = ItemSerializer(many=True)
 
     class Meta:
         model = Promo
