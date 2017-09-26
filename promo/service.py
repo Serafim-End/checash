@@ -5,8 +5,6 @@ import requests
 
 from lxml import html
 
-import string
-
 from items.models import Item
 
 from .models import Promo
@@ -121,7 +119,7 @@ class PromoService(object):
                         data = data[0] + '/' + str(datetime.now().year)
                         _end = _d(data)
                     else:
-                        data = string.join([data , '/' , str(datetime.now().year)]), string.join([data , '/' , str(datetime.now().year)])
+                        data = tostring(data , '/' , str(datetime.now().year)), tostring(data , '/' , str(datetime.now().year))
                         _start, _end = _d(data)
 
                     j = i * 4 - 1
