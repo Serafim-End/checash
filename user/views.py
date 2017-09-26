@@ -59,13 +59,13 @@ class PersonViewSet(ModelViewSet):
 
         person = self.get_object()
 
-        if request.method == 'post':
+        if request.method == 'POST':
             person.current_cashback = 0
             person.save()
             return Response(status=status.HTTP_200_OK)
 
-        elif request.method == 'get':
-            return Response(json.dumps(person.current_cashbac),
+        elif request.method == 'GET':
+            return Response(json.dumps(person.current_cashback),
                             status=status.HTTP_200_OK)
 
     @detail_route(methods=['get'], url_path='get-all-time-bonus')
