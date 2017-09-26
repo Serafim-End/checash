@@ -90,7 +90,7 @@ class PromoService(object):
             return l.encode('utf-8').decode('utf-8')
 
         def _d(d):
-            return datetime.strptime(d.pop(), DATE_FORMAT)
+            return datetime.strptime(d, DATE_FORMAT)
 
         j = 0
         page_id = 1
@@ -120,7 +120,7 @@ class PromoService(object):
                         _end = _d(data)
                     else:
                         data = data + '/' + str(datetime.now().year), data + '/' + str(datetime.now().year)
-                        _end, _start = _d(data), _d(data)
+                        _start, _end = _d(data)
 
                     j = i * 4 - 1
                     category = _str(_p(PATH_CATEGORY_DIXY_SKIDKI_NEDELI)[j])
