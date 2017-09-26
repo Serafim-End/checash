@@ -48,7 +48,7 @@ class PromoService(object):
         response = requests.get(BASE_DISCOUNT_URL)
         parsed_body = html.fromstring(response.text)
 
-        for i in range(len(_p(PATH_WHOLE_CONTENT))):
+        for i in xrange(len(_p(PATH_WHOLE_CONTENT))):
 
             title = _str(_p(PATH_TITLE)[i])
             data = re.findall(r'\d{2}.\d{2}.\d{2,4}', title)
@@ -105,7 +105,7 @@ class PromoService(object):
 
             if page_active == page_id:
 
-                for i in range(len(_p(PATH_WHOLE_CONTENT_DIXY_SKIDKI_NEDELI))):
+                for i in xrange(len(_p(PATH_WHOLE_CONTENT_DIXY_SKIDKI_NEDELI))):
                     title = _str(_p(PATH_WHOLE_CONTENT_DIXY_SKIDKI_NEDELI)[i])
 
                     data = re.findall(r'\d{2}/\d{2}', title)
@@ -129,7 +129,7 @@ class PromoService(object):
 
                     price_old = _p(PATH_PRICE_OLD_DIXY_SKIDKI_NEDELI)[i]
 
-                    if price_old.isdigit() == False:
+                    if not price_old.isdigit():
                         price_old = price_new / 0.9
 
                     yield {
