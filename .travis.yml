@@ -20,7 +20,6 @@ env:
 install:
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
-  - pip install codecov
 
 before_script:
   - psql -c 'create database travis_ci_db;' -U postgres
@@ -28,11 +27,8 @@ before_script:
 
 script:
   - python manage.py migrate
-  - coverage run tests.py
-#  - python manage.py test
+  - python manage.py test
 
-after_success:
-  - codecov
 
 #deploy:
 #  provider: heroku
