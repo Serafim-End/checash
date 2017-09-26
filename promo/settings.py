@@ -11,3 +11,29 @@ PATH_PRICE_OLD = '//div[@class="old-price"]/text()'
 PATH_FRACT_OLD = '//div[@class="old-price"]/span/text()'
 PATH_TITLE = '//div[@class="product-day" or @class="product-title"]//text()'
 PATH_PROMO = '//div[@class="discount  " or @class="value"]/text()'
+
+BASE_DISCOUNT_URL_DIXY_SKIDKI_NEDELI = '{}{}'.format(
+    BASE_URL, '/akcii/skidki-nedeli/?PAGEN_1='
+)
+
+PATH_WHOLE_CONTENT_DIXY_SKIDKI_NEDELI = (
+    '//div[contains(@class, "elem-badge-cornered")]/text()'
+)
+
+PATH_NAME_DIXY_SKIDKI_NEDELI = '//div[@class="elem-product__image"]/img/@alt'
+PATH_PHOTO_DIXY_SKIDKI_NEDELI = '//div[@class="elem-product__image"]/img/@src'
+PATH_CATEGORY_DIXY_SKIDKI_NEDELI = '//div[@class="product-category"]/text()'
+
+PATH_PRICE_NEW_DIXY_SKIDKI_NEDELI = (
+    '//span[@class="price-discount__integer"]/text()'
+)
+
+PATH_PRICE_OLD_DIXY_SKIDKI_NEDELI = (
+    '//div[@class="elem-product__price-container"]/'
+    'div[@class="just-now"]/text()|//span[@class="price-full__integer"]/text()'
+)
+PATH_TITLE_DIXY_SKIDKI_NEDELI = (
+    '//div[contains(@class, "elem-badge-cornered")]/text()'
+)
+
+PATH_ACTIVE_PAGE_NUMBER = '//li[@class="active"]/a[@href="#"]/text()'
