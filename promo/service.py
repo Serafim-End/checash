@@ -79,7 +79,7 @@ class PromoService(object):
     @staticmethod
     def dixy_skidki_nedeli():
 
-        DATE_FORMAT = '%d.%m.%Y'
+        DATE_FORMAT = '"%d/%m/%Y"'
 
 
         def _p(p):
