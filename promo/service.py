@@ -150,8 +150,8 @@ class PromoService(object):
 
 
     def combine():
-        yield from dixy_skidki_nedeli()
-        yield from dixy()
+        yield from PromoService.dixy_skidki_nedeli()
+        yield from PromoService.dixy()
 
     @ staticmethod
 
