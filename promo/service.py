@@ -148,13 +148,12 @@ class PromoService(object):
                 break
             page_id += 1
 
-
+    @staticmethod
     def combine():
         yield from PromoService.dixy_skidki_nedeli()
         yield from PromoService.dixy()
 
-    @ staticmethod
-
+    @staticmethod
     def get_actual_promos():
 
         promos = []
