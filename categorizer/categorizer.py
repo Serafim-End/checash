@@ -1,4 +1,5 @@
 
+import os
 import operator
 import json
 import ssl
@@ -20,6 +21,8 @@ import nltk
 nltk.download('stopwords')
 
 from nltk.corpus import stopwords
+
+from checash.settings import BASE_DIR
 
 
 class Categorizer(object):
@@ -168,12 +171,23 @@ def test():
                u'хлеб черный Дарницкий 1234гр']
     for phr in phrases:
         print(categorizer.get_сategory(phr))
-        print('->'.join(categorizer.get_categories_hierarchy(phr)))
+        print()
+        print(categorizer.get_categories_hierarchy(phr))
         print('')
+        print()
 
     print(categorizer.isClose(u'молоко деревенское', u'сметана домашняя'))
 
     return 0
+
+categorizer = Categorizer(
+    os.path.join(
+        os.path.join(
+            os.path.join(BASE_DIR, 'categorizer'),
+            'dict_goods_categorized.json'
+        )
+    )
+)
 
 
 if __name__ == '__main__':

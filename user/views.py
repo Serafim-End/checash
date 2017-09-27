@@ -1,11 +1,10 @@
 
 import json
 
-from datetime import datetime
-
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
+from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 
 from bill.serializers import BillSerializer
@@ -13,6 +12,7 @@ from bill.service import BillService
 from bill.models import Bill
 from promo.serializers import PromoSerializer
 from promo.service import PromoService
+from categorizer.categorizer import categorizer
 
 from .models import Person
 from .serializers import PersonSerializer
@@ -22,6 +22,7 @@ class PersonViewSet(ModelViewSet):
 
     queryset = Person.objects.all()
     serializer_class = PersonSerializer
+    # renderer_classes = (JSONRenderer, )
 
     @detail_route(methods=['post'], url_path='add-bill')
     def add_bill(self, request, pk=None):
@@ -115,7 +116,28 @@ class PersonViewSet(ModelViewSet):
             for f in important_fields:
                 data[-1][f] = getattr(bill, f)
         print(json)
-        return Response(json.dumps(data), status.HTTP_200_OK)
+        return Response(data, status.HTTP_200_OK)
+
+    @detail_route(methods=['get'], url_path='get-statistics')
+    def get_statistics(self, request, pk=None):
+
+        person = self.get_object()
+
+        data = {}
+        for bill in person.bills.all():
+
+            for item in bill.items.all():
+                h_1, h_2, cat_id = categorizer.get_сategory(item.name)
+
+                if not isinstance(data[cat_id], dict):
+                    data[cat_id] = {'name': ' '.join([h_1, h_2]),
+                                    'sum': 0,
+                                    'items': []}
+
+                data[cat_id]['items'].append(item.name)
+                data[cat_id]['sum'] += item.price
+
+        return Response(data, status=status.HTTP_200_OK)
 
     @detail_route(methods='get',
                   url_path='get-bill-promos/(?P<bill_id>[0-9]+)')
