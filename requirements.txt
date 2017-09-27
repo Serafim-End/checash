@@ -9,3 +9,5 @@ gunicorn==19.7.1
 whitenoise==3.3.0
 django-rest-swagger==2.1.2
 lxml==4.0.0
+pymystem3==0.1.5
+nltk==3.2.5
