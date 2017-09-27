@@ -193,7 +193,7 @@ class PromoService(object):
 
             promo = Promo.objects.create(
                 cashback_rub=abs(e.get('price_new') - e.get('price_old')),
-                title=e.get('title'),
+                title=e.get('name'),
                 lower_bound_rub=e.get('price_new'),
                 due_date=e.get('end'),
                 start_date=e.get('start')
