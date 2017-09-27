@@ -37,3 +37,6 @@ PATH_TITLE_DIXY_SKIDKI_NEDELI = (
 )
 
 PATH_ACTIVE_PAGE_NUMBER = '//li[@class="active"]/a[@href="#"]/text()'
+
+
+PATH_LAST_PAGE_ID = '//div/nav/ul/li[7]/a/text()'

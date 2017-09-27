@@ -1,16 +1,14 @@
 
-import traceback
-
 from rest_framework import serializers
 
-from items.serializers import ItemSerializer
-
 from .models import Promo
+
+from items.serializers import ItemSerializer
 
 
 class PromoSerializer(serializers.ModelSerializer):
 
-    items = ItemSerializer()
+    items = ItemSerializer(many=False)
 
     class Meta:
         model = Promo
