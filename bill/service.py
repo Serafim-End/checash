@@ -29,7 +29,7 @@ class BillService(object):
                 BillService.BASE_URL,
                 params=qr
             )
-        except requests.RequestException:
+        except Exception:
             return {'qr': qr}
 
         json_result = r.json()
