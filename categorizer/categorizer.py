@@ -14,14 +14,14 @@ class Categorizer:
 	def __init__(self, data_path):
 		self.lemmer = Mystem()
 		self.stop_words = set(stopwords.words('russian'))
-		stops = ['что', 'этот', 'где', 'чем', 'кем', 'кому', 'это', 'так', 'вот', 'быть', 'как', 'в', 'к', 'на', 'и']
+		stops = [u'для', u'под', u'на', u'из', u'что', u'этот', u'где', u'чем', u'кем', u'кому', u'это', u'так', u'вот', u'быть', u'как', u'в', u'к', u'на', u'и']
 		self.stop_words.update(stops)
 		self.quotes_re = re.compile(u'(\".*?\")|(\'.*?\')')
 
 		self.goods_index = dict()
 		with open(data_path, 'r') as f:
 			goods_index = json.loads(f.read().strip())
-			self.goods_index = { v[0]:v[1] for v in map(lambda s: (self.normalizePhrase(s), goods_index[s]), goods_index.keys()) }
+			self.goods_index = { self.normalizePhrase(phrase):info for (phrase, info) in goods_index.items() }
 
 		self.categories_tree = dict()
 		for info in self.goods_index.values():
@@ -47,8 +47,8 @@ class Categorizer:
 		pass
 
 	def normalizePhrase(self, phrase):
-		phrase = self.quotes_re.sub('', phrase)
-		norm = ' '.join( sorted( filter(lambda w: w not in self.stop_words, self.lemmer.lemmatize(phrase)))).strip()
+		phrase = self.quotes_re.sub('', phrase).lower()
+		norm = ' '.join( sorted( filter(lambda w: w not in self.stop_words, self.lemmer.lemmatize(phrase)))).strip("-+ \n")
 		return norm
 
 	def getPhrasesByIntersection(self, phrase, isNorm=False):
@@ -68,15 +68,15 @@ class Categorizer:
 		return result
 
 	# 3 уровня категоризации - от широкого к узкому (последний зашифрован)
-	def getCategoriesHierarchy(self, phrase):
-		norm = self.normalizePhrase(phrase)
+	def getCategoriesHierarchy(self, phrase, isNorm=False):
+		norm = phrase if isNorm else self.normalizePhrase(phrase)
 		simlist = self.getPhrasesByIntersection(norm, isNorm=True)
 
-#		print "\n".join(simlist)
+		#print ('|'.join(simlist))
 		# выбираем категорию по наибольшему рейтингу на самом узком уровне
 		# рейтинг составляется по сл. алгоритму:
 		# 1) берем все фразы из базы категорий, с которыми данная пересекается хотя бы по одному слову
-		# 2) рейтинг каждой категории = sum( 1/<rank пер. фразы по данной кат.> * 1/<длина фразы>) по всем пер. фразам из данной кат.
+		# 2) рейтинг каждой категории = sum( <rank пер. фразы по данной кат.> * <кол. сматченных слов>^2) по всем пер. фразам из данной кат.
 		#
 		levels = range(3)
 		rating = [dict() for level in levels]
@@ -88,12 +88,12 @@ class Categorizer:
 				if categ != '':
 					if not categ in rating[level]:
 						rating[level][categ] = 0.0
-					rating[level][categ] += (1.0/float(info['rating']) * simlist[cand_phrase])
-		
+					rating[level][categ] += (float(info['rating']) * simlist[cand_phrase]**2)
+
 		# выбираем самую узкую категорию с макс. рейтингом
 		for level in reversed(levels):
 			if len(rating[level]) > 0:
-				categ = max(rating[level].iteritems(), key=operator.itemgetter(1))[0]
+				categ = max(rating[level].items(), key=operator.itemgetter(1))[0]
 				return self.getCategoryParents(categ)
 				
 		return []
@@ -102,14 +102,14 @@ class Categorizer:
 	def getCategory(self, phrase):
 		hierarchy = self.getCategoriesHierarchy(phrase)
 		if len(hierarchy) == 3:
-			return hierarchy[2]
+			return hierarchy[1]
 		return hierarchy[-1] if len(hierarchy) else ''
 
 	# близки ли товарные фразы
 	def isClose(self, phrase_1, phrase_2):
 		norm_1 = self.normalizePhrase(phrase_1)
 		norm_2 = self.normalizePhrase(phrase_2)
-		cnt_common_words = set(norm_1.split(' ')).intersection(set(norm_2.split(' ')))
+		cnt_common_words = len(set(norm_1.split(' ')).intersection(set(norm_2.split(' '))))
 
 		# если > 2 общих слов -- то близки
 		if cnt_common_words > 2:
@@ -121,7 +121,7 @@ class Categorizer:
 		for level in range(min(len(hierarchy_1), len(hierarchy_2))):
 			if hierarchy_1[level] == hierarchy_2[level]:
 				sim_level = level
-				break
+
 		# если в одной категории на определенном уровне -- то близки
 		# можно настраивать точность тут 
 		return sim_level == 2 
@@ -131,11 +131,11 @@ def test():
 #	print categorizer.getPhrasesByIntersection(u'подушка')
 	phrases = [u'молоко "Домик в Деревне" 2л', u'Подушка "ваше счастье" икеа', u'хлеб черный Дарницкий 1234гр']
 	for phr in phrases:
-		print categorizer.getCategory(phr)
-		print '->'.join(categorizer.getCategoriesHierarchy(phr))
-		print ''
+		print (categorizer.getCategory(phr))
+		print ('->'.join(categorizer.getCategoriesHierarchy(phr)))
+		print ('')
 
-	print categorizer.isClose(u'молоко деревенское', u'сметана домашняя')
+	print (categorizer.isClose(u'молоко деревенское', u'сметана домашняя'))
 
 	return 0
 
