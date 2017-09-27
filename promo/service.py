@@ -122,8 +122,8 @@ class PromoService(object):
                         #data = tostring(data , '/' , str(datetime.now().year)), tostring(data , '/' , str(datetime.now().year))
                         #_start, _end = _d(data)
                         
-                        _start = _d(data[0] + '/' + str(datetime.now().year), DATE_FORMAT)
-                        _end = _d(data[1] + '/' + str(datetime.now().year), DATE_FORMAT)
+                        _start = _d(data[0] + '/' + str(datetime.now().year))
+                        _end = _d(data[1] + '/' + str(datetime.now().year))
 
                     j = i * 4 - 1
                     category = _str(_p(PATH_CATEGORY_DIXY_SKIDKI_NEDELI)[j])
