@@ -128,9 +128,15 @@ class PersonViewSet(ModelViewSet):
 
             for item in bill.items.all():
 
-                h_1, h_2, cat_id = categorizer.get_categories_hierarchy(
+                r = categorizer.get_categories_hierarchy(
                     item.name
                 )
+
+                if len(r) == 0:
+                    h_1, h_2, cat_id = u'Другие', u'совсем другие', -1
+                
+                else:
+                    h_1, h_2, cat_id = r
 
                 if cat_id not in data:
                     data[cat_id] = {'name': ' '.join([h_1, h_2]),
