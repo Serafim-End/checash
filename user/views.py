@@ -149,6 +149,32 @@ class PersonViewSet(ModelViewSet):
 
         return Response(data, status=status.HTTP_200_OK)
 
+    @detail_route(methods=['get'], url_path='get-statistics-short')
+    def get_statistics_short(self, request, pk=None):
+        person = self.get_object()
+
+        data = {}
+        for bill in person.bills.all():
+
+            for item in bill.items.all():
+
+                r = categorizer.get_categories_hierarchy(
+                    item.name
+                )
+
+                if len(r) == 0:
+                    h_1, h_2, cat_id = u'Другие', u'совсем другие', -1
+
+                else:
+                    h_1, h_2, cat_id = r
+
+                if h_2 not in data:
+                    data[h_2] = 0
+
+                data[h_2] += item.price
+
+        return Response(data, status=status.HTTP_200_OK)
+
     @detail_route(methods='get',
                   url_path='get-bill-promos/(?P<bill_id>[0-9]+)')
     def get_bill_promos(self, request, pk=None, bill_id=None):
