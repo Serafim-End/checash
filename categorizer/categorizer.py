@@ -2,7 +2,6 @@
 import operator
 import json
 import ssl
-import sys
 import re
 
 from collections import Counter
@@ -34,36 +33,22 @@ class Categorizer(object):
         self.stop_words.update(stops)
         self.quotes_re = re.compile(u'(\".*?\")|(\'.*?\')')
 
-		# self.goods_index = dict()
-		# with open(data_path, 'r') as f:
-		# 	goods_index = json.loads(f.read().strip())
-		# 	self.goods_index = { self.normalizePhrase(phrase):info for (phrase, info) in goods_index.items() }
-
-        self.goods_index = dict()
+        self.goods_index = {}
         with open(data_path, 'r', encoding='utf-8') as f:
             goods_index = json.load(f)
-            # goods_index = json.loads(f.read().strip())
 
             self.goods_index = {
                 self.normalize_phrase(k): v for k, v in goods_index.items()
             }
 
-            # self.goods_index = {
-            #     v[0]: v[1] for v in map(
-            #         lambda s: (self.normalize_phrase(s), goods_index[s]),
-            #         goods_index.keys()
-            #     )
-            # }
-
-        self.categories_tree = dict()
+        self.categories_tree = {}
         for info in self.goods_index.values():
             for i in range(len(info['categs'])):
                 self.categories_tree[info['categs'][i]] = (
-                    info['categs'][i - 1] if i != 0
-                    else -1
+                    info['categs'][i - 1] if i != 0 else -1
                 )
 
-        self.reverse_index = dict()
+        self.reverse_index = {}
         for phrase in self.goods_index.keys():
             for word in phrase.split(' '):
                 if word not in self.reverse_index:
@@ -110,18 +95,20 @@ class Categorizer(object):
         # print("\n".join(sim_list))
         # выбираем категорию по наибольшему рейтингу на самом узком уровне
         # рейтинг составляется по сл. алгоритму:
-        # 1) берем все фразы из базы категорий, с которыми данная пересекается хотя бы по одному слову
-        # 2) рейтинг каждой категории = sum( 1/<rank пер. фразы по данной кат.> * 1/<длина фразы>) по всем пер. фразам из данной кат.
+        # 1) берем все фразы из базы категорий,
+        #  с которыми данная пересекается хотя бы по одному слову
+        # 2) рейтинг каждой категории = sum(
+        #    1/<rank пер. фразы по данной кат.> * 1/<длина фразы>
+        # ) по всем пер. фразам из данной кат.
 
         levels = range(3)
-        rating = [dict() for level in levels]
+        rating = [{} for _ in levels]
         for cand_phrase in sim_list.keys():
             info = self.goods_index[cand_phrase]
-            categ = info['categs']
             for level in range(len(rating)):
                 categ = info['categs'][level]
-                if categ != '':
-                    if not categ in rating[level]:
+                if categ:
+                    if categ not in rating[level]:
                         rating[level][categ] = 0.0
                     rating[level][categ] += (
                         1.0 / float(info['rating']) * sim_list[cand_phrase]
@@ -137,8 +124,14 @@ class Categorizer(object):
 
         return []
 
-    # используем 2-й уровень категоризации (он не зашифрован и не так обширен, как 1-й)
     def get_сategory(self, phrase):
+        """
+        используем 2-й уровень категоризации
+         (он не зашифрован и не так обширен, как 1-й)
+
+        :param phrase:
+        :return:
+        """
         hierarchy = self.get_categories_hierarchy(phrase)
         if len(hierarchy) == 3:
             return hierarchy[2]
@@ -162,6 +155,7 @@ class Categorizer(object):
             if hierarchy_1[level] == hierarchy_2[level]:
                 sim_level = level
                 break
+
         # если в одной категории на определенном уровне -- то близки
         # можно настраивать точность тут
         return sim_level == 2
@@ -183,4 +177,4 @@ def test():
 
 
 if __name__ == '__main__':
-    sys.exit(test())
+    test()
