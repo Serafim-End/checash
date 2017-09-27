@@ -34,6 +34,11 @@ class Categorizer(object):
         self.stop_words.update(stops)
         self.quotes_re = re.compile(u'(\".*?\")|(\'.*?\')')
 
+		# self.goods_index = dict()
+		# with open(data_path, 'r') as f:
+		# 	goods_index = json.loads(f.read().strip())
+		# 	self.goods_index = { self.normalizePhrase(phrase):info for (phrase, info) in goods_index.items() }
+
         self.goods_index = dict()
         with open(data_path, 'r', encoding='utf-8') as f:
             goods_index = json.load(f)
@@ -72,7 +77,8 @@ class Categorizer(object):
                 filter(lambda w: w not in self.stop_words,
                        self.lemmer.lemmatize(phrase))
             )
-        ).strip()
+        ).strip('-+ \n')
+
         return norm
 
     def get_phrases_by_intersection(self, phrase, is_norm=False):
@@ -118,14 +124,15 @@ class Categorizer(object):
                     if not categ in rating[level]:
                         rating[level][categ] = 0.0
                     rating[level][categ] += (
-                        1.0 / float(info['rating']) * sim_list[cand_phrase])
+                        1.0 / float(info['rating']) * sim_list[cand_phrase]
+                    )
 
         # выбираем самую узкую категорию с макс. рейтингом
         for level in reversed(levels):
             if len(rating[level]) > 0:
-                categ = \
-                    max(rating[level].iteritems(), key=operator.itemgetter(1))[
-                        0]
+                categ = max(rating[level].items(),
+                            key=operator.itemgetter(1))[0]
+
                 return self.get_category_parents(categ)
 
         return []
@@ -141,8 +148,8 @@ class Categorizer(object):
     def isClose(self, phrase_1, phrase_2):
         norm_1 = self.normalize_phrase(phrase_1)
         norm_2 = self.normalize_phrase(phrase_2)
-        cnt_common_words = set(norm_1.split(' ')).intersection(
-            set(norm_2.split(' ')))
+        cnt_common_words = len(set(norm_1.split(' ')).intersection(
+            set(norm_2.split(' '))))
 
         # если > 2 общих слов -- то близки
         if cnt_common_words > 2:
