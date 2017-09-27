@@ -24,10 +24,13 @@ class BillService(object):
             if k in ('fn', 'i', 'fp', 'n'):
                 qr[k] = v
 
-        r = requests.get(
-            BillService.BASE_URL,
-            params=qr
-        )
+        try:
+            r = requests.get(
+                BillService.BASE_URL,
+                params=qr
+            )
+        except requests.RequestException:
+            return {'qr': qr}
 
         json_result = r.json()
 
@@ -36,7 +39,7 @@ class BillService(object):
             return json_result
 
         else:
-            data = {'qr': qr}
+            return {'qr': qr}
 
     @staticmethod
     def determine_cashback(self, instance):
