@@ -42,7 +42,6 @@ class Bill(models.Model):
     in_processing = models.BooleanField(default=True)
 
 
-
 # class BillItem(models.Model):
 #     bills = models.ForeignKey(Bill, models.CASCADE,
 #                               related_name='bill_items')

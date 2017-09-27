@@ -139,7 +139,7 @@ class PromoService(object):
                 'url': '{}{}'.format(
                     BASE_URL,
                     self._str(
-                        self._p(pb, PATH_NAME_DIXY_SKIDKI_NEDELI)[i]
+                        self._p(pb, PATH_PHOTO_DIXY_SKIDKI_NEDELI)[i]
                     )
                 ),
 
