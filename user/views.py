@@ -127,9 +127,12 @@ class PersonViewSet(ModelViewSet):
         for bill in person.bills.all():
 
             for item in bill.items.all():
-                h_1, h_2, cat_id = categorizer.get_сategory(item.name)
 
-                if not isinstance(data[cat_id], dict):
+                h_1, h_2, cat_id = categorizer.get_categories_hierarchy(
+                    item.name
+                )
+
+                if cat_id not in data:
                     data[cat_id] = {'name': ' '.join([h_1, h_2]),
                                     'sum': 0,
                                     'items': []}
