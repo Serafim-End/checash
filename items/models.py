@@ -6,7 +6,7 @@ from bill.models import Bill
 
 class Item(models.Model):
 
-    name = models.CharField(max_length=64)
+    name = models.CharField(max_length=128)
     description = models.CharField(max_length=128, blank=True, default='')
 
     url = models.URLField(null=True)
