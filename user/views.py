@@ -134,12 +134,13 @@ class PersonViewSet(ModelViewSet):
 
                 if len(r) == 0:
                     h_1, h_2, cat_id = u'Другие', u'совсем другие', -1
-                
+
                 else:
                     h_1, h_2, cat_id = r
 
                 if cat_id not in data:
-                    data[cat_id] = {'name': ' '.join([h_1, h_2]),
+                    data[cat_id] = {'category_high': h_1,
+                                    'category_low': h_2,
                                     'sum': 0,
                                     'items': []}
 
