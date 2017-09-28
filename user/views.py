@@ -4,7 +4,7 @@ import json
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.decorators import detail_route
 from rest_framework.response import Response
-from rest_framework.renderers import JSONRenderer
+# from rest_framework.renderers import JSONRenderer
 from rest_framework import status
 
 from bill.serializers import BillSerializer

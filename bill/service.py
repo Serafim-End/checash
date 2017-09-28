@@ -17,12 +17,20 @@ class BillService(object):
     @staticmethod
     def get_info(data):
 
-        data = data.get('qr')
-        qr = {}
-        for e in data.split('&'):
-            k, v = e.split('=')
-            if k in ('fn', 'i', 'fp', 'n'):
-                qr[k] = v
+        qr_data = data.get('qr')
+
+        if qr_data:
+            qr = {}
+            for e in qr_data.split('&'):
+                k, v = e.split('=')
+                if k in ('fn', 'i', 'fp', 'n'):
+                    qr[k] = v
+
+        else:
+            _g = lambda n: data.get(n)
+
+            fn, i, fp, n = _g('fn'), _g('i'), _g('fp'), _g('n')
+            qr = {'fn': fn, 'i': i, 'fp': fp, 'n': n}
 
         try:
             r = requests.get(
