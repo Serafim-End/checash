@@ -120,7 +120,12 @@ class PersonViewSet(ModelViewSet):
 
     @detail_route(methods=['get'], url_path='get-statistics')
     def get_statistics(self, request, pk=None):
-
+        """
+        full bill statistics of each user
+        :param request:
+        :param pk:
+        :return: {} 
+        """
         person = self.get_object()
 
         data = {}
@@ -151,6 +156,12 @@ class PersonViewSet(ModelViewSet):
 
     @detail_route(methods=['get'], url_path='get-statistics-short')
     def get_statistics_short(self, request, pk=None):
+        """
+        represents categorized statistics of the user
+        :param request:
+        :param pk:
+        :return: {} should not contain any
+        """
         person = self.get_object()
 
         data = {}
