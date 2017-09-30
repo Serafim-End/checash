@@ -124,7 +124,7 @@ class PersonViewSet(ModelViewSet):
         full bill statistics of each user
         :param request:
         :param pk:
-        :return: {} 
+        :return: {}
         """
         person = self.get_object()
 

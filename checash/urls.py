@@ -28,6 +28,7 @@ urlpatterns = [
     url(r'^', include('bill.urls')),
     url(r'^', include('user.urls')),
     url(r'^', include('promo.urls')),
+    url(r'^', include('items.urls'))
 ]
 
 if DEBUG:
