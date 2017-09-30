@@ -5,6 +5,7 @@ from rest_framework import status
 
 from .serializers import BillSerializer
 from .service import BillService
+from .models import Bill
 
 
 class BillView(APIView):
@@ -24,10 +25,40 @@ class BillView(APIView):
 
         data = request.data
 
-        bill_info = BillService.get_info(data)
+        qr = BillService.prepare_data(data)
 
-        serializer = BillSerializer(data=bill_info)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
+        queryset = Bill.objects.filter(fiscalSign=qr.get('fp'))
+        if not queryset.count():
 
-        return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+            bill_info = BillService.get_info(qr)
+            serializer = BillSerializer(data=bill_info)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+
+            return Response(data=serializer.data,
+                            status=status.HTTP_201_CREATED)
+
+        return Response(data=BillSerializer(queryset.all(), many=True).data,
+                        status=status.HTTP_200_OK)
+
+
+class BillFPView(APIView):
+
+    def get(self, request, format=None):
+
+        data = request.data
+
+        fp = data.get('fp')
+
+        if not fp:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+
+        q = Bill.objects.filter(fiscalSign=fp)
+
+        if not q.count():
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        return Response(
+            BillSerializer(q.all(), many=True).data,
+            status=status.HTTP_200_OK
+        )

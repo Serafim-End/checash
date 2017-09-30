@@ -15,7 +15,7 @@ class BillService(object):
     BASE_URL = 'https://qrtests.herokuapp.com/receipts/get'
 
     @staticmethod
-    def get_info(data):
+    def prepare_data(data):
 
         qr_data = data.get('qr')
 
@@ -31,6 +31,11 @@ class BillService(object):
 
             fn, i, fp, n = _g('fn'), _g('i'), _g('fp'), _g('n')
             qr = {'fn': fn, 'i': i, 'fp': fp, 'n': n}
+
+        return qr
+
+    @staticmethod
+    def get_info(qr):
 
         try:
             r = requests.get(

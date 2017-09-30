@@ -34,7 +34,8 @@ class PersonViewSet(ModelViewSet):
         and errors otherwise
         """
         person = self.get_object()
-        bill_info = BillService.get_info(request.data)
+        qr = BillService.prepare_data(request.data)
+        bill_info = BillService.get_info(qr)
         serializer = BillSerializer(data=bill_info)
 
         if serializer.is_valid():
