@@ -13,4 +13,3 @@ class Promo(models.Model):
     start_date = models.DateTimeField(auto_now=True)
     cashback_rub = models.IntegerField()
     lower_bound_rub = models.IntegerField()
-

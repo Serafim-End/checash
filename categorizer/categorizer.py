@@ -164,22 +164,6 @@ class Categorizer(object):
         return sim_level == 2
 
 
-def test():
-    categorizer = Categorizer('dict_goods_categorized.json')
-    # print categorizer.getPhrasesByIntersection(u'подушка')
-    phrases = [u'молоко "Домик в Деревне" 2л', u'Подушка "ваше счастье" икеа',
-               u'хлеб черный Дарницкий 1234гр']
-    for phr in phrases:
-        print(categorizer.get_сategory(phr))
-        print()
-        print(categorizer.get_categories_hierarchy(phr))
-        print('')
-        print()
-
-    print(categorizer.isClose(u'молоко деревенское', u'сметана домашняя'))
-
-    return 0
-
 categorizer = Categorizer(
     os.path.join(
         os.path.join(

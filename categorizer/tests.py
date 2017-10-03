@@ -24,6 +24,26 @@ class CategorizerTestCases(unittest.TestCase):
         for t in self.names:
             self.assertIsNotNone(self.categorizer.get_сategory(t))
 
+    def test_all(self):
+
+        phrases = [u'молоко "Домик в Деревне" 2л', u'Подушка "ваше счастье" икеа',
+                   u'хлеб черный Дарницкий 1234гр']
+
+        for phr in phrases:
+            print(self.categorizer.get_сategory(phr))
+            print()
+            print(self.categorizer.get_categories_hierarchy(phr))
+            print('')
+            print()
+
+        print(
+            self.categorizer.isClose(
+                u'молоко деревенское', u'сметана домашняя'
+            )
+        )
+
+        return 0
+
 
 if __name__ == '__main__':
     unittest.main()
