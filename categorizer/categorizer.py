@@ -140,8 +140,13 @@ class Categorizer(object):
             return hierarchy[2]
         return hierarchy[-1] if len(hierarchy) else ''
 
-    # близки ли товарные фразы
     def isClose(self, phrase_1, phrase_2):
+        """
+        близки ли товарные фразы
+        :param phrase_1:
+        :param phrase_2:
+        :return:
+        """
         norm_1 = self.normalize_phrase(phrase_1)
         norm_2 = self.normalize_phrase(phrase_2)
         cnt_common_words = len(set(norm_1.split(' ')).intersection(
