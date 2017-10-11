@@ -112,9 +112,9 @@ class Categorizer(object):
                 categ = info['categs'][level]
                 if categ:
                     if categ not in rating[level]:
-                        rating[level][categ] = 0.0
+                        rating[level][categ] = 0.
                     rating[level][categ] += (
-                        1.0 / float(info['rating']) * sim_list[cand_phrase]
+                        1. / float(info['rating']) * sim_list[cand_phrase]
                     )
 
         # выбираем самую узкую категорию с макс. рейтингом
@@ -177,7 +177,3 @@ categorizer = Categorizer(
         )
     )
 )
-
-
-if __name__ == '__main__':
-    test()
